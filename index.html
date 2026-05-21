@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小旅星球 · 20城清新旅游攻略</title>
+    <style>
+        :root {
+            --pink: #ff9a9e;
+            --pink-light: #fecfef;
+            --mint: #a1c4fd;
+            --mint-light: #c2e9fb;
+            --peach: #fbc2eb;
+            --yellow: #f6d365;
+            --yellow-light: #fda085;
+            --bg: #fef9ff;
+            --card-bg: #ffffff;
+            --text: #4a4a5a;
+            --text-light: #7f8c8d;
+            --border: #f0e4f0;
+            --shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+            --shadow-hover: 0 14px 40px rgba(0, 0, 0, 0.08);
+            --radius: 24px;
+            --radius-sm: 16px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --tag-route: #a29bfe;
+            --tag-food: #fd79a8;
+            --tag-spot: #74b9ff;
+            --tag-event: #e056a0;
+            --tag-hotel: #00b894;
+            --font-heading: 'PingFang SC', 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Noto Sans SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #fdf6f0 0%, #fef0f6 40%, #f0f9ff 100%);
+            color: var(--text);
+            line-height: 1.7;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* 可爱的背景装饰 */
+        body::before {
+            content: "🌸 🍃 ✨ 🍡 🐾 🌼";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            font-size: 2rem;
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: -1;
+            white-space: pre-wrap;
+            letter-spacing: 30px;
+            line-height: 3;
+            transform: rotate(-5deg);
+            color: #b8a9c9;
+        }
+
+        /* 导航栏 */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid #f0e0f0;
+            padding: 0 2rem;
+        }
+        .navbar-inner {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #e84393;
+            text-decoration: none;
+            font-family: var(--font-heading);
+        }
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #fbc2eb, #a18cd1);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(232, 67, 147, 0.25);
+        }
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            list-style: none;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #5a5a7a;
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 8px 16px;
+            border-radius: 30px;
+            white-space: nowrap;
+            transition: var(--transition);
+            background: rgba(255, 255, 255, 0.6);
+        }
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #fff;
+            background: #e84393;
+            box-shadow: 0 4px 15px rgba(232, 67, 147, 0.3);
+            font-weight: 600;
+        }
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 8px;
+            z-index: 1001;
+        }
+        .hamburger span {
+            display: block;
+            width: 26px;
+            height: 2.5px;
+            background: #4a4a5a;
+            border-radius: 3px;
+            transition: var(--transition);
+        }
+
+        /* 主容器 */
+        .main-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 2rem 3rem;
+        }
+
+        /* Hero */
+        .hero {
+            text-align: center;
+            padding: 3rem 1rem 2rem;
+        }
+        .hero h1 {
+            font-size: clamp(2.2rem, 4vw, 3rem);
+            font-weight: 900;
+            color: #2d2d44;
+            margin-bottom: 0.5rem;
+            font-family: var(--font-heading);
+        }
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, #fbc2eb, #a18cd1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero .subtitle {
+            font-size: 1.05rem;
+            color: #8e8ea0;
+            margin-bottom: 1.8rem;
+            letter-spacing: 0.5px;
+        }
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+        .hero-stat {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 12px 24px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+        .hero-stat .num {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #e84393;
+            font-family: var(--font-heading);
+        }
+        .hero-stat .label {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+        }
+
+        /* 搜索栏 */
+        .search-bar-wrap {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2.5rem;
+        }
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            border-radius: 50px;
+            padding: 6px 6px 6px 22px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+            width: 100%;
+            max-width: 500px;
+            gap: 8px;
+            border: 2px solid transparent;
+            transition: var(--transition);
+        }
+        .search-bar:focus-within {
+            border-color: #e84393;
+            box-shadow: 0 8px 35px rgba(232, 67, 147, 0.15);
+        }
+        .search-bar input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+            background: transparent;
+        }
+        .search-bar button {
+            background: linear-gradient(135deg, #fbc2eb, #a18cd1);
+            color: #fff;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            white-space: nowrap;
+            letter-spacing: 0.5px;
+        }
+        .search-bar button:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 20px rgba(232, 67, 147, 0.4);
+        }
+
+        /* 城市标签 */
+        .city-filter {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 2.8rem;
+            padding: 0 0.5rem;
+        }
+        .city-tag {
+            padding: 8px 18px;
+            border-radius: 30px;
+            border: 2px solid #f0d0e0;
+            background: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            user-select: none;
+            white-space: nowrap;
+            color: #5a5a7a;
+        }
+        .city-tag:hover {
+            border-color: #e84393;
+            color: #e84393;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(232, 67, 147, 0.15);
+        }
+        .city-tag.active {
+            background: linear-gradient(135deg, #fbc2eb, #a18cd1);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 6px 25px rgba(232, 67, 147, 0.3);
+        }
+
+        /* 内容布局 */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 2rem;
+            align-items: start;
+        }
+        .main-content {
+            min-width: 0;
+        }
+        .sidebar {
+            position: sticky;
+            top: 90px;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* 标题 */
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-heading);
+            color: #2d2d44;
+            background: rgba(255,255,255,0.6);
+            padding: 6px 16px;
+            border-radius: 30px;
+            display: inline-flex;
+        }
+        .section-title .badge {
+            font-size: 0.7rem;
+            background: #e84393;
+            color: #fff;
+            padding: 3px 12px;
+            border-radius: 12px;
+            font-weight: 500;
+            margin-left: 4px;
+        }
+
+        /* 卡片 */
+        .card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
+        }
+        .card h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+            font-family: var(--font-heading);
+            color: #2d2d44;
+        }
+        .card p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
+        }
+
+        /* 标签 */
+        .tag-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 0.6rem;
+        }
+        .tag {
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+        .tag-route {
+            background: #e8e0ff;
+            color: #6c5ce7;
+        }
+        .tag-food {
+            background: #ffe0e6;
+            color: #d63384;
+        }
+        .tag-spot {
+            background: #dff0ff;
+            color: #0d6efd;
+        }
+        .tag-event {
+            background: #fde0f0;
+            color: #c44569;
+        }
+        .tag-hotel {
+            background: #d4f3e6;
+            color: #0b7b4b;
+        }
+
+        /* 线路卡片 */
+        .route-card {
+            border-left: 5px solid #a29bfe;
+            padding-left: 1.2rem;
+            background: rgba(255,255,255,0.7);
+        }
+        .route-days {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 0.8rem;
+        }
+        .route-day-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 0.9rem;
+        }
+        .route-day-num {
+            background: linear-gradient(135deg, #fbc2eb, #a18cd1);
+            color: #fff;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        /* 美食列表 */
+        .food-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+        .food-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px dashed #f0e0f0;
+        }
+        .food-item:last-child {
+            border-bottom: none;
+        }
+        .star-rating {
+            color: #f39c12;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        /* 打卡点网格 */
+        .spot-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .spot-tag {
+            background: #dff0ff;
+            color: #0d6efd;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+        .spot-tag:hover {
+            background: #b8daff;
+            transform: scale(1.03);
+        }
+
+        /* 活动列表 */
+        .event-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+        .event-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* 住宿列表 */
+        .hotel-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+        .hotel-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px dashed #f0e0f0;
+        }
+        .hotel-item:last-child {
+            border-bottom: none;
+        }
+
+        /* 侧边栏 */
+        .sidebar-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius);
+            padding: 1.4rem;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+        .sidebar-card h4 {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            font-family: var(--font-heading);
+            font-size: 1.05rem;
+            color: #2d2d44;
+        }
+        .sidebar-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .sidebar-list li {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            padding: 8px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            color: #5a5a7a;
+        }
+        .sidebar-list li:hover {
+            background: #fdf0f6;
+            color: #e84393;
+        }
+        .sidebar-list .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .dot-food { background: #fd79a8; }
+        .dot-spot { background: #74b9ff; }
+        .dot-event { background: #e056a0; }
+        .dot-hotel { background: #00b894; }
+        .highlight-box {
+            background: #fff0f5;
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            color: #c44569;
+            border-left: 4px solid #e84393;
+        }
+
+        /* 页脚 */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: #8e8ea0;
+            font-size: 0.85rem;
+            border-top: 1px solid #f0e0f0;
+            margin-top: 3rem;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2d2d44;
+            color: #fff;
+            padding: 12px 28px;
+            border-radius: 30px;
+            font-weight: 600;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(8px);
+        }
+
+        /* 响应式 */
+        @media (max-width: 968px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                position: static;
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 1rem;
+            }
+            .hero-stats {
+                gap: 1rem;
+            }
+        }
+        @media (max-width: 640px) {
+            .navbar {
+                padding: 0 1rem;
+            }
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 64px;
+                left: 0;
+                right: 0;
+                background: rgba(255, 255, 255, 0.98);
+                backdrop-filter: blur(20px);
+                padding: 1.5rem;
+                gap: 0.5rem;
+                box-shadow: var(--shadow);
+                border-radius: 0 0 20px 20px;
+            }
+            .nav-links.open {
+                display: flex;
+            }
+            .hamburger {
+                display: flex;
+            }
+            .main-container {
+                padding: 0 1rem 2rem;
+            }
+            .city-tag {
+                padding: 6px 12px;
+                font-size: 0.75rem;
+            }
+            .card {
+                padding: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="navbar-inner">
+            <a href="#" class="logo">
+                <span class="logo-icon">🌸</span> 小旅星球
+            </a>
+            <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home" class="active" data-nav="home">🏠 首页</a></li>
+                <li><a href="#routes" data-nav="routes">🗺️ 线路</a></li>
+                <li><a href="#food" data-nav="food">🍜 美食</a></li>
+                <li><a href="#spots" data-nav="spots">📍 打卡</a></li>
+                <li><a href="#events" data-nav="events">🎉 活动</a></li>
+                <li><a href="#hotels" data-nav="hotels">🏨 住宿</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="toast" id="toast"></div>
+
+    <div class="main-container">
+        <section class="hero" id="home">
+            <h1>探索<span class="highlight">中国</span>，收集小确幸</h1>
+            <p class="subtitle">✨ 20座城市 · 60+精选线路 · 美食打卡住宿全攻略 ✨</p>
+            <div class="hero-stats">
+                <div class="hero-stat"><span class="num">20</span><span class="label">热门城市</span></div>
+                <div class="hero-stat"><span class="num">70+</span><span class="label">主题线路</span></div>
+                <div class="hero-stat"><span class="num">100+</span><span class="label">美食推荐</span></div>
+                <div class="hero-stat"><span class="num">🐾</span><span class="label">可爱攻略</span></div>
+            </div>
+        </section>
+
+        <div class="search-bar-wrap">
+            <div class="search-bar">
+                <span>🔍</span>
+                <input type="text" id="searchInput" placeholder="搜索城市、美食、打卡点...">
+                <button id="searchBtn">搜一搜</button>
+            </div>
+        </div>
+
+        <div class="city-filter" id="cityFilter">
+            <span class="city-tag active" data-city="all">🌈 全部</span>
+            <span class="city-tag" data-city="beijing">🏯 北京</span>
+            <span class="city-tag" data-city="shanghai">🌆 上海</span>
+            <span class="city-tag" data-city="chengdu">🐼 成都</span>
+            <span class="city-tag" data-city="hangzhou">🪷 杭州</span>
+            <span class="city-tag" data-city="xian">🏛️ 西安</span>
+            <span class="city-tag" data-city="chongqing">🌉 重庆</span>
+            <span class="city-tag" data-city="guilin">🏞️ 桂林</span>
+            <span class="city-tag" data-city="wuhan">🌁 武汉</span>
+            <span class="city-tag" data-city="xinjiang">🐫 新疆</span>
+            <span class="city-tag" data-city="tibet">🏔️ 西藏</span>
+            <span class="city-tag" data-city="haerbin">❄️ 哈尔滨</span>
+            <span class="city-tag" data-city="guangzhou">🌺 广州</span>
+            <span class="city-tag" data-city="shenzhen">💻 深圳</span>
+            <span class="city-tag" data-city="xiamen">🏖️ 厦门</span>
+            <span class="city-tag" data-city="qingdao">🍺 青岛</span>
+            <span class="city-tag" data-city="dali">☁️ 大理</span>
+            <span class="city-tag" data-city="changsha">🌶️ 长沙</span>
+            <span class="city-tag" data-city="nanjing">🏮 南京</span>
+            <span class="city-tag" data-city="sanya">🌴 三亚</span>
+            <span class="city-tag" data-city="shenyang">🏭 沈阳</span>
+        </div>
+
+        <div class="content-grid">
+            <div class="main-content" id="mainContent"></div>
+            <aside class="sidebar" id="sidebar"></aside>
+        </div>
+    </div>
+    <footer class="footer">
+        <p>🌸 小旅星球 · 清新可爱的旅游攻略平台 | 数据仅供参考，出行前请确认最新信息 | 带着好心情出发吧 ✨</p>
+    </footer>
+
+    <script>
+        (function() {
+            const citiesData = {
+                beijing: {
+                    id: 'beijing', name: '北京', emoji: '🏯', description: '千年古都，红墙绿瓦间的故事。',
+                    routes: [
+                        { name: '经典皇城两日游', days: ['Day1：天安门→故宫→景山→南锣鼓巷', 'Day2：八达岭长城→鸟巢/水立方→簋街'], tags: ['经典', '文化'] },
+                        { name: '胡同文艺漫步', days: ['Day1：五道营→国子监→什刹海→烟袋斜街→后海'], tags: ['文艺', '胡同'] },
+                        { name: '皇家园林深度', days: ['Day1：颐和园→圆明园→清华', 'Day2：天坛→前门→大栅栏'], tags: ['园林', '历史'] },
+                        { name: '京郊自然之旅', days: ['Day1：香山→植物园', 'Day2：古北水镇→司马台长城夜游'], tags: ['自然', '郊外'] }
+                    ],
+                    food: [
+                        { name: '北京烤鸭', desc: '全聚德/四季民福，皮脆肉嫩', rating: 5, emoji: '🦆' },
+                        { name: '炸酱面', desc: '老北京地道风味', rating: 4, emoji: '🍜' },
+                        { name: '涮羊肉', desc: '铜锅炭火，东来顺', rating: 5, emoji: '🍲' },
+                        { name: '豆汁焦圈', desc: '传统早餐挑战', rating: 3, emoji: '🥣' },
+                        { name: '卤煮火烧', desc: '门框胡同百年', rating: 4, emoji: '🥘' }
+                    ],
+                    spots: ['故宫角楼', '红砖美术馆', '银河SOHO', '颐和园十七孔桥', '天坛祈年殿'],
+                    events: [{ name: '地坛庙会', desc: '春节传统年味' }, { name: '798艺术区展览', desc: '全年当代艺术' }, { name: '古北水镇夜游', desc: '浪漫提灯' }],
+                    hotels: [{ name: '颐和安缦', desc: '皇家园林奢华', price: '¥3500+' }, { name: '胡同四合院民宿', desc: '什刹海附近', price: '¥600-1200' }, { name: '国贸大酒店', desc: 'CBD高空夜景', price: '¥2000+' }]
+                },
+                shanghai: {
+                    id: 'shanghai', name: '上海', emoji: '🌆', description: '魔都魅力，梧桐树下的咖啡香。',
+                    routes: [
+                        { name: '经典魔都两日游', days: ['Day1：外滩→南京路→豫园→城隍庙', 'Day2：迪士尼乐园全天'], tags: ['经典', '乐园'] },
+                        { name: '法租界文艺漫步', days: ['Day1：武康路→安福路→永康路→思南公馆→新天地'], tags: ['文艺', '咖啡'] },
+                        { name: '浦东现代都市游', days: ['Day1：陆家嘴三件套→上海中心→浦东美术馆→滨江夜骑'], tags: ['现代', '夜景'] },
+                        { name: '弄堂美食探店', days: ['Day1：田子坊→日月光→云南南路', 'Day2：老西门→文庙→黄河路'], tags: ['美食', '弄堂'] }
+                    ],
+                    food: [
+                        { name: '生煎包', desc: '大壶春/小杨生煎', rating: 5, emoji: '🥟' },
+                        { name: '小笼包', desc: '南翔馒头店', rating: 5, emoji: '🧆' },
+                        { name: '葱油拌面', desc: '弄堂味道', rating: 4, emoji: '🍝' },
+                        { name: '本帮红烧肉', desc: '浓油赤酱', rating: 5, emoji: '🍖' },
+                        { name: '蟹粉豆腐', desc: '秋季鲜美', rating: 4, emoji: '🦀' }
+                    ],
+                    spots: ['外滩万国建筑', '武康大楼', '1933老场坊', '浦东美术馆', '豫园', '上海中心大厦'],
+                    events: [{ name: '上海时装周', desc: '3月/10月' }, { name: '外滩灯光秀', desc: '国庆元旦' }, { name: '简单生活节', desc: '音乐盛会' }],
+                    hotels: [{ name: '和平饭店', desc: '外滩历史建筑', price: '¥2500+' }, { name: '建业里嘉佩乐', desc: '石库门别墅', price: '¥3000+' }, { name: '迪士尼乐园酒店', desc: '亲子首选', price: '¥1800+' }]
+                },
+                chengdu: {
+                    id: 'chengdu', name: '成都', emoji: '🐼', description: '天府之国，慢悠悠的茶馆时光。',
+                    routes: [
+                        { name: '熊猫文化两日', days: ['Day1：大熊猫基地→宽窄巷子→魁星楼', 'Day2：武侯祠→锦里→杜甫草堂→玉林路'], tags: ['熊猫', '文化'] },
+                        { name: '美食寻味之旅', days: ['Day1：建设巷→春熙路→IFS大熊猫', 'Day2：文殊院素斋→人民公园→太古里'], tags: ['美食', '茶馆'] },
+                        { name: '青城都江堰一日', days: ['Day1：青城山→都江堰→南桥夜景'], tags: ['自然', '世界遗产'] },
+                        { name: '深度文艺三日', days: ['Day1：东郊记忆→U37', 'Day2：三星堆→金沙遗址', 'Day3：三圣乡→蓝顶美术馆'], tags: ['文艺', '博物馆'] }
+                    ],
+                    food: [
+                        { name: '麻辣火锅', desc: '小龙坎/蜀大侠', rating: 5, emoji: '🫕' },
+                        { name: '串串香', desc: '钢管厂五区', rating: 5, emoji: '🍢' },
+                        { name: '担担面', desc: '街头经典', rating: 4, emoji: '🍜' },
+                        { name: '龙抄手', desc: '皮薄馅大', rating: 4, emoji: '🥟' },
+                        { name: '兔头', desc: '双流老妈兔头', rating: 4, emoji: '🐰' }
+                    ],
+                    spots: ['IFS大熊猫', '锦里古街', '大熊猫基地', '都江堰', '东郊记忆', '鸳鸯楼'],
+                    events: [{ name: '成都国际美食节', desc: '每年秋季' }, { name: '都江堰放水节', desc: '清明传统' }, { name: '草莓音乐节', desc: '年轻人的狂欢' }],
+                    hotels: [{ name: '博舍酒店', desc: '太古里内', price: '¥2200+' }, { name: '圆和圆佛禅客栈', desc: '文殊院旁', price: '¥500-900' }, { name: '青城山六善', desc: '隐世奢华', price: '¥3000+' }]
+                },
+                hangzhou: {
+                    id: 'hangzhou', name: '杭州', emoji: '🪷', description: '人间天堂，西湖烟雨朦胧。',
+                    routes: [
+                        { name: '西湖经典环湖', days: ['Day1：断桥→白堤→孤山→曲院风荷→苏堤→雷峰塔', 'Day2：灵隐寺→飞来峰→龙井村→九溪'], tags: ['西湖', '经典'] },
+                        { name: '茶文化体验', days: ['Day1：龙井村采茶→茶叶博物馆→梅家坞', 'Day2：径山寺→径山茶道'], tags: ['茶文化', '禅意'] },
+                        { name: '古镇水乡两日', days: ['Day1：乌镇西栅', 'Day2：西塘古镇→烟雨长廊'], tags: ['古镇', '水乡'] },
+                        { name: '城市文艺新地标', days: ['Day1：天目里→茑屋书店→美院象山校区', 'Day2：小河直街→大兜路→拱宸桥'], tags: ['文艺', '建筑'] }
+                    ],
+                    food: [
+                        { name: '西湖醋鱼', desc: '楼外楼经典', rating: 4, emoji: '🐟' },
+                        { name: '东坡肉', desc: '肥而不腻', rating: 5, emoji: '🍖' },
+                        { name: '龙井虾仁', desc: '茶香虾鲜', rating: 5, emoji: '🍤' },
+                        { name: '葱包烩', desc: '街边小吃', rating: 4, emoji: '🫔' },
+                        { name: '片儿川', desc: '杭州面食', rating: 4, emoji: '🍜' }
+                    ],
+                    spots: ['集贤亭', '天目里', '法喜寺', '灵隐寺', '雷峰塔', '中国美院象山校区'],
+                    events: [{ name: '西湖国际博览会', desc: '每年秋季' }, { name: '乌镇戏剧节', desc: '10月狂欢' }, { name: '云栖大会', desc: '科技盛会' }],
+                    hotels: [{ name: '法云安缦', desc: '灵隐寺旁', price: '¥4000+' }, { name: '西溪悦榕庄', desc: '江南园林', price: '¥2500+' }, { name: '西湖边民宿', desc: '满觉陇路', price: '¥400-800' }]
+                },
+                xian: {
+                    id: 'xian', name: '西安', emoji: '🏛️', description: '十三朝古都，梦回大唐。',
+                    routes: [
+                        { name: '历史遗迹两日', days: ['Day1：兵马俑→华清宫→长恨歌', 'Day2：城墙骑行→碑林→钟鼓楼→回民街'], tags: ['历史', '经典'] },
+                        { name: '大唐盛世体验', days: ['Day1：大明宫→大唐芙蓉园→大雁塔喷泉', 'Day2：陕西历史博物馆→大唐不夜城→长安十二时辰'], tags: ['唐文化', '夜游'] },
+                        { name: '华山一日挑战', days: ['Day1：华山（西峰索道上→长空栈道→北峰下）'], tags: ['登山', '挑战'] },
+                        { name: '美食深度游', days: ['Day1：洒金桥→大皮院→小学习巷', 'Day2：永兴坊→东新街夜市→德福巷'], tags: ['美食', '夜市'] }
+                    ],
+                    food: [
+                        { name: '肉夹馍', desc: '秦豫肉夹馍', rating: 5, emoji: '🥙' },
+                        { name: '羊肉泡馍', desc: '老孙家/同盛祥', rating: 5, emoji: '🍲' },
+                        { name: 'biangbiang面', desc: '油泼辣子', rating: 5, emoji: '🍝' },
+                        { name: '凉皮', desc: '魏家凉皮', rating: 4, emoji: '🥗' },
+                        { name: '甑糕', desc: '甜蜜软糯', rating: 4, emoji: '🍚' }
+                    ],
+                    spots: ['西安城墙', '大雁塔', '钟楼', '兵马俑', '大唐不夜城', '长安十二时辰'],
+                    events: [{ name: '城墙灯会', desc: '春节灯火' }, { name: '大唐不夜城演出', desc: '不倒翁小姐姐' }, { name: '草莓音乐节', desc: '古城狂欢' }],
+                    hotels: [{ name: '索菲特传奇', desc: '钟楼附近', price: '¥1800+' }, { name: '城墙脚下民宿', desc: '顺城巷内', price: '¥350-700' }, { name: '华清御汤酒店', desc: '温泉私享', price: '¥2000+' }]
+                },
+                chongqing: {
+                    id: 'chongqing', name: '重庆', emoji: '🌉', description: '8D魔幻山城，火锅沸腾的热情。',
+                    routes: [
+                        { name: '魔幻山城两日', days: ['Day1：解放碑→洪崖洞→千厮门大桥→八一好吃街', 'Day2：李子坝→鹅岭二厂→磁器口→南山一棵树'], tags: ['经典', '夜景'] },
+                        { name: '火锅寻味之旅', days: ['Day1：较场口夜市→佩姐老火锅→洪崖洞夜拍', 'Day2：黄桷坪涂鸦街→交通茶馆→枇杷园火锅山'], tags: ['火锅', '市井'] },
+                        { name: '武隆自然奇观', days: ['Day1：天生三桥→龙水峡地缝', 'Day2：仙女山森林公园'], tags: ['自然', '世界遗产'] },
+                        { name: '文艺打卡深度', days: ['Day1：鹅岭公园→二厂→长江索道→龙门浩', 'Day2：北仓文创→观音桥→九街'], tags: ['文艺', '打卡'] }
+                    ],
+                    food: [
+                        { name: '重庆火锅', desc: '九宫格牛油', rating: 5, emoji: '🫕' },
+                        { name: '重庆小面', desc: '花市碗杂面', rating: 5, emoji: '🍜' },
+                        { name: '酸辣粉', desc: '好又来', rating: 4, emoji: '🍲' },
+                        { name: '江湖菜', desc: '南山泉水鸡', rating: 5, emoji: '🌶️' },
+                        { name: '冰粉', desc: '清凉解辣', rating: 4, emoji: '🍧' }
+                    ],
+                    spots: ['洪崖洞', '李子坝轻轨站', '长江索道', '鹅岭二厂', '磁器口古镇', '南山一棵树'],
+                    events: [{ name: '重庆火锅节', desc: '10月万人宴' }, { name: '南山音乐节', desc: '夏夜派对' }, { name: '磁器口庙会', desc: '春节民俗' }],
+                    hotels: [{ name: '来福士洲际', desc: '朝天门地标', price: '¥1800+' }, { name: '南山民宿群', desc: '俯瞰夜景', price: '¥400-1000' }, { name: '解放碑威斯汀', desc: '市中心', price: '¥1200+' }]
+                },
+                guilin: {
+                    id: 'guilin', name: '桂林', emoji: '🏞️', description: '山水甲天下，漓江如画。',
+                    routes: [
+                        { name: '经典桂林阳朔三日', days: ['Day1：象鼻山→两江四湖夜游', 'Day2：漓江竹筏(杨堤-兴坪)→兴坪古镇→西街', 'Day3：遇龙河漂流→十里画廊→银子岩'], tags: ['山水', '经典'] },
+                        { name: '龙脊梯田摄影', days: ['Day1：龙脊梯田(金坑大寨)→千层天梯', 'Day2：平安壮寨→七星伴月→返程'], tags: ['梯田', '摄影'] },
+                        { name: '阳朔深度户外', days: ['Day1：相公山日出→老寨山徒步', 'Day2：银子岩→世外桃源'], tags: ['户外', '探险'] },
+                        { name: '桂林市区精华', days: ['Day1：象鼻山→七星公园→东西巷→正阳步行街'], tags: ['市区', '悠闲'] }
+                    ],
+                    food: [
+                        { name: '桂林米粉', desc: '卤菜粉，锅烧牛肉', rating: 5, emoji: '🍜' },
+                        { name: '啤酒鱼', desc: '阳朔特色', rating: 5, emoji: '🐟' },
+                        { name: '荔浦扣肉', desc: '芋头五花肉', rating: 4, emoji: '🥩' },
+                        { name: '田螺酿', desc: '螺肉猪肉馅', rating: 4, emoji: '🐚' },
+                        { name: '油茶', desc: '恭城油茶', rating: 3, emoji: '🍵' }
+                    ],
+                    spots: ['象鼻山', '漓江', '龙脊梯田', '遇龙河', '阳朔西街', '银子岩'],
+                    events: [{ name: '桂林山水文化旅游节', desc: '秋季' }, { name: '阳朔渔火节', desc: '漓江渔火' }, { name: '龙脊梯田火把节', desc: '壮观夜景' }],
+                    hotels: [{ name: '阳朔悦榕庄', desc: '漓江畔', price: '¥2500+' }, { name: '漓江泊隐酒店', desc: '桂林江景', price: '¥800-1500' }, { name: '龙脊梯田民宿', desc: '梯田景观', price: '¥300-700' }]
+                },
+                wuhan: {
+                    id: 'wuhan', name: '武汉', emoji: '🌁', description: '九省通衢，江湖气魄。',
+                    routes: [
+                        { name: '武汉经典两日', days: ['Day1：黄鹤楼→户部巷→长江大桥→江汉路', 'Day2：东湖绿道→湖北省博物馆→楚河汉街'], tags: ['经典', '文化'] },
+                        { name: '武大樱花一日', days: ['Day1：武汉大学樱花大道→东湖樱花园→光谷步行街'], tags: ['樱花', '春季'] },
+                        { name: '老汉口风情', days: ['Day1：江汉关→黎黄陂路→吉庆街→知音号游船'], tags: ['民国', '风情'] },
+                        { name: '美食寻味', days: ['Day1：户部巷过早→万松园美食街→粮道街'], tags: ['美食', '过早'] }
+                    ],
+                    food: [
+                        { name: '热干面', desc: '蔡林记麻酱', rating: 5, emoji: '🍜' },
+                        { name: '鸭脖', desc: '周黑鸭/精武', rating: 5, emoji: '🦴' },
+                        { name: '豆皮', desc: '老通城三鲜豆皮', rating: 4, emoji: '🫔' },
+                        { name: '武昌鱼', desc: '清蒸/红烧', rating: 4, emoji: '🐟' },
+                        { name: '面窝', desc: '外酥内软', rating: 4, emoji: '🍩' }
+                    ],
+                    spots: ['黄鹤楼', '武汉大学', '东湖', '长江大桥', '湖北省博物馆', '江汉路'],
+                    events: [{ name: '武汉樱花节', desc: '3-4月' }, { name: '渡江节', desc: '7月横渡' }, { name: '知音号演出', desc: '民国沉浸' }],
+                    hotels: [{ name: '武汉万达瑞华', desc: '东湖旁', price: '¥1500+' }, { name: '东湖宾馆', desc: '历史底蕴', price: '¥800-1500' }, { name: '江汉路民宿', desc: '老租界区', price: '¥300-600' }]
+                },
+                xinjiang: {
+                    id: 'xinjiang', name: '新疆', emoji: '🐫', description: '辽阔壮丽，天山与草原的呼唤。',
+                    routes: [
+                        { name: '北疆喀纳斯环线', days: ['Day1：乌鲁木齐→天山天池', 'Day2：布尔津→喀纳斯湖', 'Day3：禾木村→返程'], tags: ['北疆', '经典'] },
+                        { name: '乌鲁木齐周边', days: ['Day1：天山大峡谷→国际大巴扎', 'Day2：南山牧场→自治区博物馆'], tags: ['首府', '周边'] },
+                        { name: '吐鲁番火焰山', days: ['Day1：火焰山→葡萄沟→坎儿井→交河故城'], tags: ['吐鲁番', '沙漠'] },
+                        { name: '伊犁草原风情', days: ['Day1：赛里木湖→果子沟大桥', 'Day2：那拉提草原'], tags: ['草原', '伊犁'] }
+                    ],
+                    food: [
+                        { name: '烤羊肉串', desc: '孜然飘香', rating: 5, emoji: '🍢' },
+                        { name: '大盘鸡', desc: '土豆皮带面', rating: 5, emoji: '🥘' },
+                        { name: '手抓饭', desc: '羊肉胡萝卜', rating: 5, emoji: '🍚' },
+                        { name: '烤包子', desc: '馕坑肉馅', rating: 4, emoji: '🥟' },
+                        { name: '新疆拌面', desc: '过油肉拌面', rating: 4, emoji: '🍝' }
+                    ],
+                    spots: ['天山天池', '喀纳斯湖', '火焰山', '国际大巴扎', '赛里木湖', '那拉提草原'],
+                    events: [{ name: '那达慕大会', desc: '草原盛会' }, { name: '喀纳斯金秋摄影节', desc: '9-10月' }, { name: '吐鲁番葡萄节', desc: '8月甜蜜' }],
+                    hotels: [{ name: '乌鲁木齐希尔顿', desc: '市区高端', price: '¥1000+' }, { name: '喀纳斯山庄', desc: '湖边木屋', price: '¥800-1500' }, { name: '禾木小木屋', desc: '童话村庄', price: '¥400-800' }]
+                },
+                tibet: {
+                    id: 'tibet', name: '西藏', emoji: '🏔️', description: '世界屋脊，心灵净土。',
+                    routes: [
+                        { name: '拉萨经典三日', days: ['Day1：布达拉宫→药王山→八廓街', 'Day2：大昭寺→色拉寺→罗布林卡', 'Day3：纳木错一日游'], tags: ['圣城', '经典'] },
+                        { name: '林芝桃花节', days: ['Day1：拉萨→巴松措→林芝', 'Day2：桃花沟→南迦巴瓦峰'], tags: ['桃花', '林芝'] },
+                        { name: '珠峰大本营', days: ['Day1：拉萨→羊卓雍措→日喀则', 'Day2：定日→珠峰大本营'], tags: ['珠峰', '挑战'] },
+                        { name: '拉萨文化深度', days: ['Day1：西藏博物馆→哲蚌寺→文成公主实景剧'], tags: ['文化', '历史'] }
+                    ],
+                    food: [
+                        { name: '藏面', desc: '牦牛肉汤面', rating: 4, emoji: '🍜' },
+                        { name: '甜茶', desc: '拉萨日常饮品', rating: 4, emoji: '🍵' },
+                        { name: '牦牛肉', desc: '风干或炖煮', rating: 5, emoji: '🥩' },
+                        { name: '藏式酸奶', desc: '纯正酸香', rating: 4, emoji: '🥛' },
+                        { name: '糌粑', desc: '青稞粉捏制', rating: 3, emoji: '🌾' }
+                    ],
+                    spots: ['布达拉宫', '大昭寺', '纳木错', '羊卓雍措', '珠峰大本营', '八廓街'],
+                    events: [{ name: '雪顿节', desc: '藏历六月' }, { name: '藏历新年', desc: '最隆重节日' }, { name: '林芝桃花节', desc: '3-4月' }],
+                    hotels: [{ name: '拉萨瑞吉', desc: '眺望布达拉宫', price: '¥2000+' }, { name: '香格里拉', desc: '拉萨市区', price: '¥1200+' }, { name: '八廓街民宿', desc: '转经道旁', price: '¥400-800' }]
+                },
+                haerbin: {
+                    id: 'haerbin', name: '哈尔滨', emoji: '❄️', description: '冰城夏都，东方莫斯科。',
+                    routes: [
+                        { name: '冬季冰雪两日', days: ['Day1：冰雪大世界→太阳岛雪博会', 'Day2：亚布力滑雪→中央大街'], tags: ['冰雪', '冬季'] },
+                        { name: '夏季避暑游', days: ['Day1：太阳岛→极地馆→松花江索道', 'Day2：伏尔加庄园→果戈里大街'], tags: ['避暑', '夏季'] },
+                        { name: '城市漫步', days: ['Day1：中央大街→圣索菲亚教堂→防洪纪念塔→老道外'], tags: ['建筑', '历史'] },
+                        { name: '雪乡亚布力连线', days: ['Day1：亚布力滑雪', 'Day2：雪乡→梦幻家园'], tags: ['雪乡', '滑雪'] }
+                    ],
+                    food: [
+                        { name: '锅包肉', desc: '酸甜酥脆', rating: 5, emoji: '🥩' },
+                        { name: '哈尔滨红肠', desc: '蒜香熏制', rating: 5, emoji: '🌭' },
+                        { name: '马迭尔冰棍', desc: '中央大街必吃', rating: 4, emoji: '🍦' },
+                        { name: '铁锅炖', desc: '排骨豆角贴饼子', rating: 5, emoji: '🍲' },
+                        { name: '大列巴', desc: '俄式面包', rating: 4, emoji: '🍞' }
+                    ],
+                    spots: ['冰雪大世界', '中央大街', '圣索菲亚教堂', '太阳岛', '伏尔加庄园', '亚布力滑雪场'],
+                    events: [{ name: '哈尔滨国际冰雪节', desc: '1月开幕' }, { name: '哈尔滨啤酒节', desc: '7月畅饮' }, { name: '松花江冰上活动', desc: '冬季' }],
+                    hotels: [{ name: '哈尔滨香格里拉', desc: '松花江畔', price: '¥1200+' }, { name: '中央大街酒店', desc: '欧式建筑', price: '¥500-900' }, { name: '亚布力Club Med', desc: '滑雪度假', price: '¥2000+' }]
+                },
+                guangzhou: {
+                    id: 'guangzhou', name: '广州', emoji: '🌺', description: '花城广州，美食之都。',
+                    routes: [
+                        { name: '经典羊城两日', days: ['Day1：陈家祠→上下九→沙面→珠江夜游', 'Day2：广州塔→花城广场→天河商圈'], tags: ['经典', '都市'] },
+                        { name: '老广美食之旅', days: ['Day1：西华路→北京路→文明路糖水', 'Day2：泮塘路→荔枝湾→宝华路'], tags: ['美食', '老字号'] },
+                        { name: '长隆欢乐一日', days: ['Day1：长隆野生动物世界/欢乐世界'], tags: ['乐园', '亲子'] },
+                        { name: '文艺小清新', days: ['Day1：红专厂→东山口→逵园→二沙岛'], tags: ['文艺', '拍照'] }
+                    ],
+                    food: [
+                        { name: '虾饺', desc: '晶莹剔透', rating: 5, emoji: '🥟' },
+                        { name: '肠粉', desc: '银记/源记', rating: 5, emoji: '🫔' },
+                        { name: '煲仔饭', desc: '腊味飘香', rating: 5, emoji: '🍚' },
+                        { name: '烧鹅', desc: '皮脆肉嫩', rating: 5, emoji: '🦆' },
+                        { name: '双皮奶', desc: '南信甜品', rating: 4, emoji: '🍮' }
+                    ],
+                    spots: ['广州塔', '沙面', '陈家祠', '东山口', '花城广场', '长隆'],
+                    events: [{ name: '广府庙会', desc: '元宵节期间' }, { name: '广州国际灯光节', desc: '11月' }, { name: '迎春花市', desc: '春节前夕' }],
+                    hotels: [{ name: '广州四季酒店', desc: '珠江新城高空', price: '¥1800+' }, { name: '沙面宾馆', desc: '历史建筑', price: '¥500-900' }, { name: '长隆酒店', desc: '园区内', price: '¥1500+' }]
+                },
+                shenzhen: {
+                    id: 'shenzhen', name: '深圳', emoji: '💻', description: '创新之都，山海相连。',
+                    routes: [
+                        { name: '都市地标打卡', days: ['Day1：深圳湾公园→万象天地→华侨城创意园', 'Day2：平安金融中心→COCO Park→东门老街'], tags: ['都市', '购物'] },
+                        { name: '海边休闲两日', days: ['Day1：大小梅沙→东部华侨城', 'Day2：杨梅坑→鹿嘴山庄'], tags: ['海滨', '休闲'] },
+                        { name: '主题公园狂欢', days: ['Day1：世界之窗→欢乐谷', 'Day2：锦绣中华民俗村'], tags: ['乐园', '亲子'] },
+                        { name: '文艺散步', days: ['Day1：蛇口海上世界→南海意库→价值工厂'], tags: ['文艺', '创意'] }
+                    ],
+                    food: [
+                        { name: '烧鹅濑粉', desc: '公明特色', rating: 4, emoji: '🍜' },
+                        { name: '海鲜', desc: '盐田海鲜街', rating: 5, emoji: '🦞' },
+                        { name: '椰子鸡', desc: '润园四季', rating: 5, emoji: '🥥' },
+                        { name: '肠粉', desc: '街头早餐', rating: 4, emoji: '🫔' },
+                        { name: '砂锅粥', desc: '潮汕风味', rating: 4, emoji: '🍲' }
+                    ],
+                    spots: ['深圳湾公园', '华侨城创意园', '大梅沙', '世界之窗', '海上世界', '平安金融中心'],
+                    events: [{ name: '深圳设计周', desc: '4月' }, { name: '深圳马拉松', desc: '12月' }, { name: '大鹏所城庙会', desc: '春节' }],
+                    hotels: [{ name: '深圳鹏瑞莱佛士', desc: '深圳湾畔', price: '¥2000+' }, { name: '大梅沙喜来登', desc: '海滩度假', price: '¥1200+' }, { name: '华侨城民宿', desc: '创意园附近', price: '¥400-800' }]
+                },
+                xiamen: {
+                    id: 'xiamen', name: '厦门', emoji: '🏖️', description: '海上花园，文艺小岛。',
+                    routes: [
+                        { name: '鼓浪屿一日', days: ['Day1：鼓浪屿(日光岩→菽庄花园→龙头路)'], tags: ['小岛', '文艺'] },
+                        { name: '厦门市区两日', days: ['Day1：南普陀寺→厦门大学→沙坡尾→中山路', 'Day2：园林植物园→曾厝垵→环岛路骑行'], tags: ['经典', '环岛'] },
+                        { name: '土楼文化一日', days: ['Day1：南靖土楼(田螺坑→云水谣)'], tags: ['世遗', '建筑'] },
+                        { name: '小清新打卡', days: ['Day1：猫街→沙坡尾艺术西区→华新路→百家村'], tags: ['拍照', '咖啡'] }
+                    ],
+                    food: [
+                        { name: '沙茶面', desc: '浓郁花生酱香', rating: 5, emoji: '🍜' },
+                        { name: '海蛎煎', desc: '街头小吃', rating: 4, emoji: '🦪' },
+                        { name: '土笋冻', desc: '奇特美味', rating: 4, emoji: '🍮' },
+                        { name: '烧肉粽', desc: '闽南特色', rating: 4, emoji: '🍙' },
+                        { name: '花生汤', desc: '黄则和', rating: 3, emoji: '🥜' }
+                    ],
+                    spots: ['鼓浪屿', '厦门大学', '沙坡尾', '环岛路', '曾厝垵', '园林植物园'],
+                    events: [{ name: '鼓浪屿音乐节', desc: '夏季' }, { name: '中秋博饼', desc: '农历八月' }, { name: '厦门马拉松', desc: '1月' }],
+                    hotels: [{ name: '鼓浪屿林氏府', desc: '百年别墅', price: '¥1500+' }, { name: '康莱德酒店', desc: '世茂双子塔', price: '¥1800+' }, { name: '曾厝垵民宿', desc: '文创村', price: '¥300-700' }]
+                },
+                qingdao: {
+                    id: 'qingdao', name: '青岛', emoji: '🍺', description: '红瓦绿树，碧海蓝天，啤酒飘香。',
+                    routes: [
+                        { name: '滨海经典两日', days: ['Day1：栈桥→天主教堂→大学路→信号山', 'Day2：八大关→第二海水浴场→五四广场→奥帆中心'], tags: ['经典', '滨海'] },
+                        { name: '崂山一日游', days: ['Day1：崂山仰口线→太清宫→环海公路'], tags: ['登山', '道教'] },
+                        { name: '啤酒文化之旅', days: ['Day1：啤酒博物馆→啤酒街→台东夜市'], tags: ['啤酒', '美食'] },
+                        { name: '老城漫步', days: ['Day1：小鱼山→福山路→黄县路→龙江路涂鸦'], tags: ['文艺', '漫步'] }
+                    ],
+                    food: [
+                        { name: '辣炒蛤蜊', desc: '原汁鲜辣', rating: 5, emoji: '🦪' },
+                        { name: '海鲜水饺', desc: '鲅鱼/墨鱼', rating: 5, emoji: '🥟' },
+                        { name: '青岛啤酒', desc: '原浆纯生', rating: 5, emoji: '🍺' },
+                        { name: '排骨米饭', desc: '万和春', rating: 4, emoji: '🍖' },
+                        { name: '烤鱿鱼', desc: '街头风味', rating: 4, emoji: '🦑' }
+                    ],
+                    spots: ['栈桥', '八大关', '崂山', '大学路', '信号山', '奥帆中心'],
+                    events: [{ name: '青岛国际啤酒节', desc: '7-8月' }, { name: '海洋节', desc: '7月' }, { name: '金沙滩音乐节', desc: '夏季' }],
+                    hotels: [{ name: '青岛海尔洲际', desc: '奥帆中心', price: '¥1500+' }, { name: '八大关别墅民宿', desc: '历史建筑', price: '¥600-1200' }, { name: '崂山脚下民宿', desc: '山海之间', price: '¥400-800' }]
+                },
+                dali: {
+                    id: 'dali', name: '大理', emoji: '☁️', description: '风花雪月，苍山洱海间的慢生活。',
+                    routes: [
+                        { name: '环洱海一日', days: ['Day1：古城→喜洲古镇→双廊→小普陀→环海东路'], tags: ['洱海', '骑行'] },
+                        { name: '苍山深度游', days: ['Day1：感通索道→寂照庵→玉带路', 'Day2：洗马潭索道→苍山顶'], tags: ['登山', '禅意'] },
+                        { name: '古镇漫游', days: ['Day1：大理古城→崇圣寺三塔→才村码头', 'Day2：喜洲古镇→周城扎染→蝴蝶泉'], tags: ['古镇', '文化'] },
+                        { name: '小众秘境', days: ['Day1：乌龙坝风车山→者摩山', 'Day2：沙溪古镇'], tags: ['小众', '摄影'] }
+                    ],
+                    food: [
+                        { name: '破酥粑粑', desc: '喜洲古镇', rating: 5, emoji: '🫓' },
+                        { name: '酸辣鱼', desc: '洱海鲫鱼', rating: 5, emoji: '🐟' },
+                        { name: '乳扇', desc: '大理特色', rating: 4, emoji: '🧀' },
+                        { name: '过桥米线', desc: '蒙自源', rating: 4, emoji: '🍜' },
+                        { name: '凉鸡米线', desc: '古城再回首', rating: 4, emoji: '🍝' }
+                    ],
+                    spots: ['洱海', '苍山', '大理古城', '喜洲古镇', '双廊', '崇圣寺三塔'],
+                    events: [{ name: '大理三月街', desc: '农历三月' }, { name: '白族火把节', desc: '农历六月' }, { name: '大理国际影会', desc: '不定期' }],
+                    hotels: [{ name: '大理海纳尔', desc: '洱海边', price: '¥2000+' }, { name: '古城民宿', desc: '人民路附近', price: '¥300-800' }, { name: '双廊海景客栈', desc: '亲水露台', price: '¥600-1500' }]
+                },
+                changsha: {
+                    id: 'changsha', name: '长沙', emoji: '🌶️', description: '星城长沙，辣味江湖与娱乐之都。',
+                    routes: [
+                        { name: '经典打卡两日', days: ['Day1：橘子洲→岳麓山→湖南大学→太平街', 'Day2：湖南省博物馆→IFS国金中心→超级文和友'], tags: ['经典', '文化'] },
+                        { name: '美食寻辣之旅', days: ['Day1：坡子街→火宫殿→黄兴路步行街', 'Day2：冬瓜山→南门口→渔人码头'], tags: ['美食', '夜宵'] },
+                        { name: '岳麓山深度', days: ['Day1：岳麓书院→爱晚亭→云麓宫→滑道下山'], tags: ['登山', '历史'] },
+                        { name: '文艺小众', days: ['Day1：谢子龙影像馆→李自健美术馆→后湖艺术区'], tags: ['文艺', '拍照'] }
+                    ],
+                    food: [
+                        { name: '臭豆腐', desc: '黑色经典', rating: 5, emoji: '🧆' },
+                        { name: '口味虾', desc: '麻辣小龙虾', rating: 5, emoji: '🦞' },
+                        { name: '糖油粑粑', desc: '甜糯小吃', rating: 4, emoji: '🍡' },
+                        { name: '剁椒鱼头', desc: '坛宗', rating: 5, emoji: '🐟' },
+                        { name: '长沙米粉', desc: '扁粉', rating: 4, emoji: '🍜' }
+                    ],
+                    spots: ['橘子洲', '岳麓山', '太平街', 'IFS国金中心', '超级文和友', '谢子龙影像馆'],
+                    events: [{ name: '橘洲音乐节', desc: '5月' }, { name: '中国金鹰电视艺术节', desc: '10月' }, { name: '长沙美食节', desc: '不定期' }],
+                    hotels: [{ name: '长沙尼依格罗', desc: 'IFS云端', price: '¥1500+' }, { name: '君悦酒店', desc: '湘江边', price: '¥1200+' }, { name: '五一广场民宿', desc: '市中心', price: '¥300-600' }]
+                },
+                nanjing: {
+                    id: 'nanjing', name: '南京', emoji: '🏮', description: '六朝古都，秦淮烟雨。',
+                    routes: [
+                        { name: '历史经典两日', days: ['Day1：中山陵→明孝陵→美龄宫→灵谷寺', 'Day2：南京博物院→总统府→夫子庙→秦淮河夜游'], tags: ['历史', '经典'] },
+                        { name: '民国风情一日', days: ['Day1：颐和路公馆区→先锋书店→上海路→南师大随园'], tags: ['民国', '文艺'] },
+                        { name: '秦淮美食寻味', days: ['Day1：老门东→夫子庙→大石坝街→三七八巷'], tags: ['美食', '小吃'] },
+                        { name: '秋日赏枫', days: ['Day1：栖霞山→栖霞寺'], tags: ['赏枫', '秋季'] }
+                    ],
+                    food: [
+                        { name: '盐水鸭', desc: '金陵桂花鸭', rating: 5, emoji: '🦆' },
+                        { name: '鸭血粉丝汤', desc: '回味/鸭德堡', rating: 5, emoji: '🍲' },
+                        { name: '牛肉锅贴', desc: '李记清真馆', rating: 5, emoji: '🥟' },
+                        { name: '皮肚面', desc: '易记/项记', rating: 4, emoji: '🍜' },
+                        { name: '赤豆元宵', desc: '莲湖糕团店', rating: 4, emoji: '🍡' }
+                    ],
+                    spots: ['中山陵', '夫子庙', '秦淮河', '明孝陵', '老门东', '先锋书店'],
+                    events: [{ name: '秦淮灯会', desc: '春节期间' }, { name: '南京森林音乐会', desc: '9月' }, { name: '南京马拉松', desc: '11月' }],
+                    hotels: [{ name: '南京颐和公馆', desc: '民国别墅', price: '¥1800+' }, { name: '金陵饭店', desc: '新街口地标', price: '¥1000+' }, { name: '夫子庙民宿', desc: '秦淮河畔', price: '¥300-700' }]
+                },
+                sanya: {
+                    id: 'sanya', name: '三亚', emoji: '🌴', description: '热带天堂，椰风海韵。',
+                    routes: [
+                        { name: '经典海湾两日', days: ['Day1：亚龙湾→亚龙湾森林公园→太阳湾公路', 'Day2：蜈支洲岛水上项目'], tags: ['海湾', '海岛'] },
+                        { name: '三亚湾休闲', days: ['Day1：南山寺→天涯海角→椰梦长廊日落'], tags: ['休闲', '日落'] },
+                        { name: '海棠湾度假', days: ['Day1：亚特兰蒂斯水世界→免税店', 'Day2：后海冲浪'], tags: ['度假', '购物'] },
+                        { name: '小众秘境', days: ['Day1：百福岛→太阳湾→半山半岛帆船港'], tags: ['小众', '拍照'] }
+                    ],
+                    food: [
+                        { name: '海鲜', desc: '第一市场', rating: 5, emoji: '🦞' },
+                        { name: '椰子鸡', desc: '龙泉人', rating: 5, emoji: '🥥' },
+                        { name: '清补凉', desc: '椰奶底', rating: 5, emoji: '🍧' },
+                        { name: '抱罗粉', desc: '文昌特色', rating: 4, emoji: '🍜' },
+                        { name: '和乐蟹', desc: '海南名菜', rating: 4, emoji: '🦀' }
+                    ],
+                    spots: ['亚龙湾', '蜈支洲岛', '南山寺', '椰梦长廊', '太阳湾公路', '后海'],
+                    events: [{ name: '海南国际旅游岛欢乐节', desc: '11月' }, { name: '三亚国际音乐节', desc: '冬季' }, { name: '疍家文化节', desc: '不定期' }],
+                    hotels: [{ name: '亚特兰蒂斯', desc: '水上乐园', price: '¥2500+' }, { name: '亚龙湾瑞吉', desc: '私密沙滩', price: '¥2000+' }, { name: '后海民宿', desc: '冲浪胜地', price: '¥300-800' }]
+                },
+                shenyang: {
+                    id: 'shenyang', name: '沈阳', emoji: '🏭', description: '共和国长子，盛京风华。',
+                    routes: [
+                        { name: '盛京历史两日', days: ['Day1：沈阳故宫→张氏帅府→中街', 'Day2：北陵公园→九一八历史博物馆→西塔'], tags: ['历史', '经典'] },
+                        { name: '工业记忆', days: ['Day1：中国工业博物馆→1905文创园→铁西工人村'], tags: ['工业', '文创'] },
+                        { name: '冰雪温泉', days: ['Day1：棋盘山冰雪大世界→清河半岛温泉'], tags: ['冰雪', '温泉'] },
+                        { name: '美食探店', days: ['Day1：西塔韩国街→中街小吃→塔湾兴顺夜市'], tags: ['美食', '夜市'] }
+                    ],
+                    food: [
+                        { name: '老边饺子', desc: '百年老字号', rating: 5, emoji: '🥟' },
+                        { name: '锅包肉', desc: '沈阳正宗', rating: 5, emoji: '🥩' },
+                        { name: '鸡架', desc: '熏酱/烤', rating: 5, emoji: '🍗' },
+                        { name: '冷面', desc: '西塔大冷面', rating: 4, emoji: '🍜' },
+                        { name: '马家烧麦', desc: '回民特色', rating: 4, emoji: '🧆' }
+                    ],
+                    spots: ['沈阳故宫', '张氏帅府', '北陵公园', '中街', '1905文创园', '西塔'],
+                    events: [{ name: '沈阳国际冰雪节', desc: '1月' }, { name: '沈阳韩国周', desc: '5月' }, { name: '皇寺庙会', desc: '春节' }],
+                    hotels: [{ name: '沈阳康莱德', desc: '青年大街', price: '¥1200+' }, { name: '中街故宫附近酒店', desc: '历史街区', price: '¥400-800' }, { name: '清河半岛温泉酒店', desc: '温泉度假', price: '¥800-1500' }]
+                }
+            };
+
+            const allCityIds = Object.keys(citiesData);
+            let activeCity = 'all';
+            let searchQuery = '';
+
+            const mainContent = document.getElementById('mainContent');
+            const sidebar = document.getElementById('sidebar');
+            const toast = document.getElementById('toast');
+
+            function showToast(msg) {
+                toast.textContent = msg;
+                toast.classList.add('show');
+                clearTimeout(toast._timeout);
+                toast._timeout = setTimeout(() => toast.classList.remove('show'), 2000);
+            }
+            window.showToastDirect = showToast;
+
+            function getStarHTML(rating) { return '★'.repeat(rating) + '☆'.repeat(5 - rating); }
+
+            function getFilteredCities() {
+                return activeCity === 'all' ? allCityIds.map(id => citiesData[id]) : [citiesData[activeCity]];
+            }
+
+            function applySearchFilter(cities) {
+                if (!searchQuery.trim()) return cities;
+                const q = searchQuery.trim().toLowerCase();
+                return cities.filter(c => {
+                    if (c.name.includes(q) || c.description.includes(q)) return true;
+                    if (c.routes.some(r => r.name.includes(q) || r.days.some(d => d.includes(q)))) return true;
+                    if (c.food.some(f => f.name.includes(q) || f.desc.includes(q))) return true;
+                    if (c.spots.some(s => s.includes(q))) return true;
+                    if (c.events.some(e => e.name.includes(q) || e.desc.includes(q))) return true;
+                    if (c.hotels.some(h => h.name.includes(q) || h.desc.includes(q))) return true;
+                    return false;
+                });
+            }
+
+            function renderMainContent(cities) {
+                if (cities.length === 0) {
+                    mainContent.innerHTML = `<div class="card" style="text-align:center;padding:3rem;"><h3>😔 没有找到相关内容</h3><p>试试其他关键词吧～</p></div>`;
+                    return;
+                }
+                let html = '';
+                cities.forEach(city => {
+                    html += `<div class="city-section" id="city-${city.id}"><span class="section-title">${city.emoji} ${city.name} <span class="badge">${city.routes.length}条线路</span></span><p style="color:var(--text-light);margin-bottom:1.5rem;">${city.description}</p></div>`;
+
+                    html += `<div class="section-title" id="routes-${city.id}">🗺️ 旅游线路</div>`;
+                    city.routes.forEach(route => {
+                        html += `<div class="card route-card"><h3>${route.name}</h3><div class="tag-row">${route.tags.map(t => `<span class="tag tag-route">#${t}</span>`).join('')}</div><div class="route-days">${route.days.map((d, i) => `<div class="route-day-item"><span class="route-day-num">${i+1}</span><span>${d}</span></div>`).join('')}</div></div>`;
+                    });
+
+                    html += `<div class="section-title" id="food-${city.id}">🍜 美食推荐 <span class="badge">${city.food.length}款</span></div><div class="card"><div class="food-list">`;
+                    city.food.forEach(f => {
+                        html += `<div class="food-item"><div><span>${f.emoji} <strong>${f.name}</strong></span> <span style="color:var(--text-light);font-size:0.85rem;margin-left:6px;">${f.desc}</span></div><span class="star-rating">${getStarHTML(f.rating)}</span></div>`;
+                    });
+                    html += `</div></div>`;
+
+                    html += `<div class="section-title" id="spots-${city.id}">📍 必去打卡点</div><div class="card"><div class="spot-grid">${city.spots.map(s => `<span class="spot-tag">✨ ${s}</span>`).join('')}</div></div>`;
+
+                    html += `<div class="section-title" id="events-${city.id}">🎉 特色活动</div><div class="card"><div class="event-list">${city.events.map(e => `<div class="event-item"><span class="tag tag-event">🎪</span><div><strong>${e.name}</strong><span style="color:var(--text-light);font-size:0.85rem;margin-left:6px;">— ${e.desc}</span></div></div>`).join('')}</div></div>`;
+
+                    html += `<div class="section-title" id="hotels-${city.id}">🏨 住宿推荐</div><div class="card"><div class="hotel-list">${city.hotels.map(h => `<div class="hotel-item"><div><strong>${h.name}</strong><span style="color:var(--text-light);font-size:0.85rem;margin-left:6px;">${h.desc}</span></div><span class="tag tag-hotel">${h.price}</span></div>`).join('')}</div></div>`;
+
+                    if (cities.indexOf(city) < cities.length - 1) {
+                        html += `<hr style="border:none;border-top:2px dashed #f0d0e0;margin:2rem 0;">`;
+                    }
+                });
+                mainContent.innerHTML = html;
+            }
+
+            function renderSidebar(cities) {
+                if (cities.length === 0) {
+                    sidebar.innerHTML = `<div class="sidebar-card"><h4>💡 提示</h4><p style="color:var(--text-light);">请调整搜索条件哦～</p></div>`;
+                    return;
+                }
+                let html = '';
+                cities.forEach(city => {
+                    html += `<div class="sidebar-card"><h4>${city.emoji} ${city.name} 快速导航</h4><ul class="sidebar-list">
+                        <li onclick="document.getElementById('routes-${city.id}').scrollIntoView({behavior:'smooth'})"><span class="dot dot-spot"></span> 🗺️ 线路 (${city.routes.length})</li>
+                        <li onclick="document.getElementById('food-${city.id}').scrollIntoView({behavior:'smooth'})"><span class="dot dot-food"></span> 🍜 美食 (${city.food.length})</li>
+                        <li onclick="document.getElementById('spots-${city.id}').scrollIntoView({behavior:'smooth'})"><span class="dot dot-spot"></span> 📍 打卡 (${city.spots.length})</li>
+                        <li onclick="document.getElementById('events-${city.id}').scrollIntoView({behavior:'smooth'})"><span class="dot dot-event"></span> 🎉 活动 (${city.events.length})</li>
+                        <li onclick="document.getElementById('hotels-${city.id}').scrollIntoView({behavior:'smooth'})"><span class="dot dot-hotel"></span> 🏨 住宿 (${city.hotels.length})</li>
+                    </ul><div class="highlight-box">💖 <strong>必吃：</strong>${city.food[0].emoji} ${city.food[0].name}</div><div class="highlight-box" style="background:#e8f0fe;border-left-color:#74b9ff;color:#2d4b6e;">✨ <strong>必打卡：</strong>${city.spots[0]}</div></div>`;
+                });
+                html += `<div class="sidebar-card"><h4>🌟 旅行小贴士</h4><ul class="sidebar-list"><li>📅 提前预订更优惠</li><li>📱 下载离线地图</li><li>🎒 轻装出行更自在</li><li>🍜 错峰用餐避免排队</li><li>☀️ 注意防晒与天气</li></ul></div>`;
+                sidebar.innerHTML = html;
+            }
+
+            function renderAll() {
+                let cities = getFilteredCities();
+                cities = applySearchFilter(cities);
+                renderMainContent(cities);
+                renderSidebar(cities);
+            }
+
+            // 事件绑定
+            document.querySelectorAll('.city-tag').forEach(tag => {
+                tag.addEventListener('click', function() {
+                    document.querySelectorAll('.city-tag').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    activeCity = this.dataset.city;
+                    searchQuery = '';
+                    document.getElementById('searchInput').value = '';
+                    renderAll();
+                    if (activeCity !== 'all') {
+                        setTimeout(() => {
+                            const el = document.getElementById('city-' + activeCity);
+                            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }, 200);
+                    } else {
+                        window.scrollTo({ top: 300, behavior: 'smooth' });
+                    }
+                });
+            });
+
+            document.getElementById('searchBtn').addEventListener('click', () => {
+                searchQuery = document.getElementById('searchInput').value.trim();
+                if (searchQuery && activeCity !== 'all') {
+                    activeCity = 'all';
+                    document.querySelectorAll('.city-tag').forEach(t => t.classList.remove('active'));
+                    document.querySelector('.city-tag[data-city="all"]').classList.add('active');
+                }
+                renderAll();
+            });
+            document.getElementById('searchInput').addEventListener('keypress', e => {
+                if (e.key === 'Enter') document.getElementById('searchBtn').click();
+            });
+
+            document.getElementById('hamburger').addEventListener('click', () => {
+                document.getElementById('navLinks').classList.toggle('open');
+            });
+
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    document.getElementById('navLinks').classList.remove('open');
+                    document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    const nav = this.dataset.nav;
+                    if (nav === 'home') window.scrollTo({ top: 0, behavior: 'smooth' });
+                    else {
+                        const first = getFilteredCities()[0];
+                        if (first) {
+                            let id = '';
+                            switch (nav) {
+                                case 'routes': id = 'routes-' + first.id; break;
+                                case 'food': id = 'food-' + first.id; break;
+                                case 'spots': id = 'spots-' + first.id; break;
+                                case 'events': id = 'events-' + first.id; break;
+                                case 'hotels': id = 'hotels-' + first.id; break;
+                            }
+                            if (id) document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }
+                });
+            });
+
+            document.addEventListener('keydown', e => {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                    e.preventDefault();
+                    document.getElementById('searchInput').focus();
+                }
+            });
+
+            renderAll();
+        })();
+    </script>
+</body>
+</html>
